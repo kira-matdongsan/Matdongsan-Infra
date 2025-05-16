@@ -6,6 +6,7 @@ on:
       - "flyway/**"
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -16,6 +17,27 @@ jobs:
       IMAGE_TAG: latest
 
     steps:
+      - name: Capture Start Time
+        id: start
+        run: |
+          echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+          echo "start_iso=$(date --iso-8601=seconds)" >> $GITHUB_OUTPUT
+
+      - name: Notify Discord - START 🚀
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_FLYWAY }}
+          username: "Flyway Docker Build"
+          avatar-url: "https://i.pinimg.com/736x/4b/91/be/4b91be09ffae6c280911127f99a4d8ce.jpg"
+          embed-title: "🚀 Flyway Docker 이미지 빌드 시작"
+          embed-url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          embed-description: |
+            - 🌿 브랜치: `${{ github.ref_name }}`
+            - 👤 작성자: `${{ github.actor }}`
+            - 📝 커밋: [${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})
+          embed-color: 15844367
+          embed-timestamp: ${{ steps.start.outputs.start_iso }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -32,3 +54,43 @@ jobs:
       - name: Push Docker image
         run: |
           docker push $IMAGE_NAME:$IMAGE_TAG
+
+      - name: Capture End Time and Duration
+        id: end
+        run: |
+          end_time=$(date +%s)
+          start_time=${{ steps.start.outputs.start_time }}
+          duration=$(( end_time - start_time ))
+          echo "duration=${duration}" >> $GITHUB_OUTPUT
+          echo "end_iso=$(date --iso-8601=seconds)" >> $GITHUB_OUTPUT
+
+      - name: Notify Discord - SUCCESS ✅
+        if: success()
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_FLYWAY }}
+          username: "Flyway Docker Build"
+          avatar-url: "https://i.pinimg.com/736x/4b/91/be/4b91be09ffae6c280911127f99a4d8ce.jpg"
+          embed-title: "✅ Flyway Docker 이미지 빌드 성공"
+          embed-url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          embed-description: |
+            Docker Hub에 이미지가 성공적으로 업로드되었습니다.
+            👉 [마이그레이션 실행하러 가기](https://github.com/kira-matdongsan/Matdongsan-Infra/actions/workflows/flyway-migrate.yml)
+            ⏱️ 소요 시간: `${{ steps.end.outputs.duration }}초`
+          embed-color: 5763719
+          embed-timestamp: ${{ steps.end.outputs.end_iso }}
+
+      - name: Notify Discord - FAIL ❌
+        if: failure()
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_FLYWAY }}
+          username: "Flyway Docker Build"
+          avatar-url: "https://i.pinimg.com/736x/4b/91/be/4b91be09ffae6c280911127f99a4d8ce.jpg"
+          embed-title: "❌ Flyway Docker 이미지 빌드 실패"
+          embed-url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          embed-description: |
+            이미지 빌드 또는 업로드 중 오류가 발생했습니다.
+            ⏱️ 소요 시간: `${{ steps.end.outputs.duration }}초`
+          embed-color: 15548997
+          embed-timestamp: ${{ steps.end.outputs.end_iso }}
