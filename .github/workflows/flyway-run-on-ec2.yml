@@ -2,9 +2,14 @@ name: Run Flyway Migration on EC2
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Flyway Docker Build & Push (Docker Hub)"]
+    types:
+      - completed
 
 jobs:
   flyway:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +30,7 @@ jobs:
           embed-description: |
             - 🌿 브랜치: `${{ github.ref_name }}`
             - 👤 실행자: `${{ github.actor }}`
-            - 🛠️ 실행 방식: `수동 실행`
+            - ⚙️ 실행 방식: `${{ github.event_name == 'workflow_dispatch' && '수동 실행' || '워크플로 자동 실행' }}`
           embed-color: 3447003
           embed-timestamp: ${{ steps.start.outputs.start_iso }}
 
