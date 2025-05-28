@@ -6,9 +6,12 @@ CREATE TABLE food
     english_name     VARCHAR(255),                      -- 제철음식명 영문
     is_featured      BOOLEAN DEFAULT FALSE,             -- 공개 여부
     last_featured_at DATETIME,                          -- 마지막 공개일 (featured_food.start_at)
-    image_url        TEXT,                              -- 대표 이미지
+    image_url        TEXT NOT NULL,                     -- 원본 이미지 URL
+    thumbnail_url    TEXT,                              -- 썸네일 이미지 URL           
+    color            VARCHAR(10),                       -- 대표 컬러
     subtitle         VARCHAR(255),                      -- 소제목
     description      TEXT,                              -- 설명
+    like_count       INT DEFAULT 0,                     -- 총 좋아요 수
     season_months    JSON,                              -- 제철시기
     regions          TEXT,                              -- 주요 산지
     benefits         TEXT,                              -- 효능
