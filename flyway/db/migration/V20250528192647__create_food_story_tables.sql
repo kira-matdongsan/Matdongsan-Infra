@@ -8,30 +8,18 @@ CREATE TABLE food_story (
     like_count     INT DEFAULT 0,
     report_count   INT DEFAULT 0,
     recorded_date  DATE,
+    recipe_name    VARCHAR(255),
+    ingredients    TEXT,
+    instructions   TEXT,
+    place_name     VARCHAR(255),
+    category       VARCHAR(255),
+    address        VARCHAR(255),
+    naver_url      TEXT,
     created_at     DATETIME,
     updated_at     DATETIME,
     deleted_at     DATETIME,
     FOREIGN KEY (food_id) REFERENCES food(id)
     -- FOREIGN KEY (user_id) REFERENCES user(id) -- 사용자 테이블과 연결 시 주석 해제
-);
-
--- 레시피 상세 정보
-CREATE TABLE food_story_recipe (
-    story_id     BIGINT PRIMARY KEY,
-    name         VARCHAR(255),
-    ingredients  TEXT,
-    instructions TEXT,
-    FOREIGN KEY (story_id) REFERENCES food_story(id)
-);
-
--- 플레이스 상세 정보
-CREATE TABLE food_story_place (
-    story_id   BIGINT PRIMARY KEY,
-    name       VARCHAR(255),
-    category   VARCHAR(255),
-    address    VARCHAR(255),
-    naver_url  TEXT,
-    FOREIGN KEY (story_id) REFERENCES food_story(id)
 );
 
 -- 이야기 이미지 테이블
