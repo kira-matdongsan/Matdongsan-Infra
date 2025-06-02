@@ -13,9 +13,7 @@ data "aws_iam_policy_document" "public_read_policy" {
     ]
 
     resources = [
-      "arn:aws:s3:::matdongsan-dev-bucket/food-story/*",
-      "arn:aws:s3:::matdongsan-dev-bucket/dish/*",
-      "arn:aws:s3:::matdongsan-dev-bucket/profile-image/*"
+      "arn:aws:s3:::matdongsan-dev-bucket/public/*"
     ]
   }
 }
