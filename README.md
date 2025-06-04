@@ -1,5 +1,5 @@
 # 🍱 Matdongsan Infra
-`matdongsan-infra`는 [맛동산 프로젝트](https://github.com/kira-matdongsan/Matdongsan-BE)의 AWS 인프라 구성과 데이터베이스 마이그레이션을 관리하는 레포지토리입니다.
+`Matdongsan-Infra`는 [맛동산 프로젝트](https://github.com/kira-matdongsan/Matdongsan-BE)의 AWS 인프라 구성과 데이터베이스 마이그레이션을 관리하는 레포지토리입니다.
 Terraform을 활용한 인프라 코드화와 Flyway를 통한 데이터베이스 마이그레이션 자동화로, 효율적인 DevOps 프로세스를 구현했습니다.
 
 <br/>
