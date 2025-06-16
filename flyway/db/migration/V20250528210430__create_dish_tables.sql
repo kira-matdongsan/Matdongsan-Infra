@@ -2,12 +2,14 @@
 CREATE TABLE dish
 (
     id               BIGINT AUTO_INCREMENT PRIMARY KEY,
+    food_id          BIGINT       NOT NULL,
     featured_food_id BIGINT       NOT NULL,
     name             VARCHAR(255) NOT NULL,
     vote_count       INT DEFAULT 0,
     created_at       DATETIME,
     updated_at       DATETIME,
     deleted_at       DATETIME,
+    FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (featured_food_id) REFERENCES featured_food (id)
 );
 
